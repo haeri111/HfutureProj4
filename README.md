@@ -10,7 +10,7 @@ Follow these steps to set up and run the service locally :
 ### Installation
 Clone the repository :
 
-`git clone https://github.com/yvann-hub/Robby-chatbot.git`
+`git clone https://github.com/haeri111/HfutureProj4.git`
 
 
 Navigate to the project directory :
