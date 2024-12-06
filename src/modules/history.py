@@ -9,10 +9,10 @@ class ChatHistory:
         st.session_state["history"] = self.history
 
     def default_greeting(self):
-        return "Hey Robby ! 👋"
+        return "안녕! H-Robby ! 👋"
 
     def default_prompt(self, topic):
-        return f"안녕하세요🤖 {topic} 이 주제에 대해 무엇이든 물어보세요 🤗"
+        return f"안녕하세요🤖 {topic} 에 대해 무엇이든 물어보세요 🤗"
 
     def initialize_user_history(self):
         st.session_state["user"] = [self.default_greeting()]

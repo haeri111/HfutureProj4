@@ -57,12 +57,11 @@ Layout = layout_module.Layout
 Utilities = utils_module.Utilities
 Sidebar = sidebar_module.Sidebar
 
-st.set_page_config(layout="wide", page_icon="💬", page_title="H-Robby | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="H-Robby | 1pdf-Chat-Bot 🤖")
 
-# Instantiate the main components
+# 메인컴포넌트 초기화
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-# layout.show_header("PDF, TXT, CSV")
 
 st.markdown(
     f"""
