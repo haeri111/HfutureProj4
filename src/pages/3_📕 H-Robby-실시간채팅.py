@@ -26,12 +26,26 @@ Layout = layout_module.Layout
 Utilities = utils_module.Utilities
 Sidebar = sidebar_module.Sidebar
 
-st.set_page_config(layout="wide", page_icon="💬", page_title="H-Robby | Chat-Bot 🤖")
+st.set_page_config(layout="wide", page_icon="💬", page_title="H-Robby | 실시간-Chat-Bot 🤖")
 
 # Instantiate the main components
 layout, sidebar, utils = Layout(), Sidebar(), Utilities()
 
-layout.show_header("PDF, TXT, CSV")
+#사용자 정의 가중치 슬라이더 (앙상블용)
+# st.sidebar.title("Retriever 앙상블 설정")
+# chroma_weight = st.sidebar.slider("Chroma Retriever 가중치", 0.0, 1.0, 0.5)
+# BM25_weight = st.sidebar.slider("BM25 Retriever 가중치", 0.0, 1.0, 0.5)
+
+# layout.show_header("PDF, TXT, CSV")
+st.markdown(
+    f"""
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600&display=swap" rel="stylesheet">
+    </head>
+    <h1 style='text-align: center; font-family: "IBM Plex Sans KR", sans-serif;' > 실시간으로 파일을 업로드해서 H-Robby와 대화해보세요 ! 😁</h1>
+    """,
+    unsafe_allow_html=True,
+)
 
 user_api_key = utils.load_api_key()
 
@@ -41,6 +55,14 @@ else:
     os.environ["OPENAI_API_KEY"] = user_api_key
 
     uploaded_file = utils.handle_upload(["pdf", "txt", "csv"])
+
+    st.sidebar.markdown(
+        """
+        ### 📌 가이드
+        - 각 Retriever의 응답 가중치를 조정해 앙상블 응답 결과를 변경할 수 있습니다.
+        - 가중치 합은 **1.0**이 되어야 가장 정확한 결과를 기대할 수 있습니다.
+        """
+    )
 
     if uploaded_file:
 

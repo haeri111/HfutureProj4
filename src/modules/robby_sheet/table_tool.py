@@ -6,8 +6,8 @@ import streamlit as st
 from langchain.callbacks import get_openai_callback
 from streamlit_chat import message
 
-from pandasai import PandasAI
-from pandasai.llm.openai import OpenAI
+# from pandasai import PandasAI
+# from pandasai.llm.openai import OpenAI
 
 class PandasAgent :
 

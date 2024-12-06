@@ -1,10 +1,11 @@
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.prompts.prompt import PromptTemplate
-from langchain.callbacks import get_openai_callback
+from langchain_community.callbacks.manager import get_openai_callback
+from transformers import pipeline
+# from langchain_google_genai import ChatGoogleGenerativeAI
 
-#fix Error: module 'langchain' has no attribute 'verbose'
 import langchain
 langchain.verbose = False
 
@@ -14,6 +15,21 @@ class Chatbot:
         self.model_name = model_name
         self.temperature = temperature
         self.vectors = vectors
+
+        # Hugging Face 모델 초기화
+        self.huggingface_pipeline = self.load_huggingface_pipeline()
+
+    @staticmethod
+    @st.cache_resource
+    def load_huggingface_pipeline():
+        """
+        Load Hugging Face DistilBERT model for question-answering.
+        """
+        return pipeline(
+            "question-answering",
+            model="distilbert-base-uncased-distilled-squad",  # DistilBERT QA 모델
+            tokenizer="distilbert-base-uncased-distilled-squad",
+        )
 
     qa_template = """
         You are a helpful AI assistant named Robby. The user gives you a file its content is represented by the following pieces of context, use them to answer the question at the end.
@@ -37,7 +53,6 @@ class Chatbot:
 
         retriever = self.vectors.as_retriever()
 
-
         chain = ConversationalRetrievalChain.from_llm(llm=llm,
             retriever=retriever, verbose=True, return_source_documents=True, max_tokens_limit=4097, combine_docs_chain_kwargs={'prompt': self.QA_PROMPT})
 
@@ -48,6 +63,19 @@ class Chatbot:
         #count_tokens_chain(chain, chain_input)
         return result["answer"]
 
+    def huggingface_chat(self, question, context):
+        """
+        Start a conversational chat with Hugging Face DistilBERT model.
+        """
+        response = self.huggingface_pipeline({"question": question, "context": context})
+        return response["answer"]
+
+    def gemini_chat(self, question, context):
+        """
+        Start a conversational chat with Hugging Face DistilBERT model.
+        """
+        response = self.huggingface_pipeline({"question": question, "context": context})
+        return response["answer"]
 
 def count_tokens_chain(chain, query):
     with get_openai_callback() as cb:
@@ -55,5 +83,5 @@ def count_tokens_chain(chain, query):
         st.write(f'###### Tokens used in this conversation : {cb.total_tokens} tokens')
     return result 
 
-    
+
     

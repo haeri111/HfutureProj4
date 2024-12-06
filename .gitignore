@@ -1,0 +1,7 @@
+# 환경 변수 파일 제외
+.env
+chroma_db
+chroma_db2
+embeddings
+# src/modules/__pycache__/
+# src/modules/robby_sheet/__pycache__/

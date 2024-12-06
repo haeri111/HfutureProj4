@@ -70,11 +70,11 @@ st.markdown("""
 
 # Contact
 with st.sidebar.expander("📬 Developer"):
-    st.write("**매뉴얼업로드UI 개발 및 매뉴얼청킹:** 한성진")
-    st.write("**매뉴얼임베딩 및 벡터DB연동:** 이가영")
-    st.write("**RAG구성 (검색 및 질문응답 연동):** 신하랑")
-    st.write("**프롬프트 템플릿 최적화 및 튜닝:** 최상연")
-    st.write("**채팅UI 개발 및 챗봇 문맥 유지:** 성해리")
+    st.write("**한성진:** 매뉴얼업로드UI 개발 및 매뉴얼청킹")
+    st.write("**이가영:** 매뉴얼임베딩 및 벡터DB연동")
+    st.write("**신하랑:** RAG구성 (검색 및 질문응답 연동)")
+    st.write("**최상연:** 프롬프트 템플릿 최적화 및 튜닝")
+    st.write("**성해리:** 채팅UI 개발 및 챗봇 문맥 유지")
 
 # Title
 st.markdown("""
