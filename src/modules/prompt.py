@@ -63,3 +63,14 @@ PROMPT_STR = """
     [질문]
     {question}
     """
+
+# Your role is to generate accurate answers to questions based on data about 현대 퓨처넷. Use only the provided context for answers. 
+PROMPT_STR_FOR_HF = """
+Your role is to generate accurate answers to questions based on data about 현대 퓨처넷. Use only the provided context for answers. 
+- Respond in Korean.
+- If the context doesn't contain relevant information, respond: "죄송합니다. 요청하신 정보를 찾을 수 없습니다."
+
+[Context] {context}
+[Question] {question}
+[Answer]
+"""

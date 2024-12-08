@@ -1,11 +1,14 @@
 import os
 import pickle
 import tempfile
+import shutil
 from langchain_community.document_loaders import CSVLoader, PyPDFLoader, TextLoader
 from langchain_community.vectorstores import FAISS
 # from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain_community.embeddings import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
+from langchain_chroma import Chroma
+
 
 class Embedder:
 
@@ -75,3 +78,31 @@ class Embedder:
             vectors = pickle.load(f)
         
         return vectors
+
+    @staticmethod
+    def embed_new_documents(folder_path, persist_directory):
+        
+        texts = []  # 모든 텍스트 청크를 저장할 리스트
+
+
+        # Ensure the persist directory exists or create it
+        # if not os.path.exists(persist_directory):
+            # os.makedirs(persist_directory)
+                
+        text_splitter = CharacterTextSplitter(
+            separator="\n",
+            chunk_size=1000,
+            chunk_overlap=50
+        )
+        
+        # PDF 파일 처리
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".pdf"):
+                full_path = os.path.join(folder_path, filename)
+                raw_documents = PyPDFLoader(full_path).load()
+                # 텍스트 청크로 나누기
+                documents = text_splitter.split_documents(raw_documents)
+                texts.extend(documents)  # 청크 추가
+        
+        db = Chroma.from_documents(texts, OpenAIEmbeddings(), persist_directory=persist_directory)
+        retriever = db.as_retriever(search_kwargs={"k": 10})
