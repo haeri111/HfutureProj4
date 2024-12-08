@@ -10,6 +10,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2.service_account import Credentials
 from googleapiclient.http import MediaFileUpload
 import streamlit as st
+import os
 
 class GoogleDrive: 
 
@@ -38,28 +39,28 @@ class GoogleDrive:
     def download_chroma_db(self, folder_id, db_filename="chroma.sqlite3", local_path="./chroma_db2/chroma.sqlite3"):
         
         print(f"♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡ {st.session_state}")
-        if 'googledrive' not in st.session_state:
-            # 구글 드라이브에서 chroma.sqlite3 파일을 찾고 다운로드
-            files = self.list_files_in_folder(folder_id)
-            db_file_id = None
-            for file in files:
-                print(f"File Name: {file['name']}, File ID: {file['id']}, MimeType: {file['mimeType']}")
-                # chroma.sqlite3 파일 찾기
-                if file['name'] == db_filename:
-                    db_file_id = file['id']
+    # if 'googledrive' not in st.session_state:
+        # 구글 드라이브에서 chroma.sqlite3 파일을 찾고 다운로드
+        files = self.list_files_in_folder(folder_id)
+        db_file_id = None
+        for file in files:
+            print(f"File Name: {file['name']}, File ID: {file['id']}, MimeType: {file['mimeType']}")
+            # chroma.sqlite3 파일 찾기
+            if file['name'] == db_filename:
+                db_file_id = file['id']
 
-            # chroma.sqlite3 파일 다운로드
-            if db_file_id:
-                print(f"Downloading '{db_filename}' with File ID: {db_file_id}")
-                self.download_file(db_file_id, local_path) # 로컬에 저장
-                print(f"File '{db_filename}' has been downloaded successfully.")
-            else:
-                print(f"No {db_filename} file found in the folder.")
-            
-            # 세션에 db, retriever 저장
-            st.session_state["googledrive"] = True
+        # chroma.sqlite3 파일 다운로드
+        if db_file_id:
+            print(f"Downloading '{db_filename}' with File ID: {db_file_id}")
+            self.download_file(db_file_id, local_path) # 로컬에 저장
+            print(f"File '{db_filename}' has been downloaded successfully.")
         else:
-            print(f"File '{db_filename}' has already been downloaded previously. Skipping download.")
+            print(f"No {db_filename} file found in the folder.")
+        
+        # 세션에 db, retriever 저장
+        st.session_state["googledrive"] = True
+    # else:
+    #     print(f"File '{db_filename}' has already been downloaded previously. Skipping download.")
 
         print(f"♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡♡2222 {st.session_state}")
 

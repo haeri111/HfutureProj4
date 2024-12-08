@@ -2,10 +2,12 @@ from typing import Optional
 from chromadb import PersistentClient
 from langchain_chroma import Chroma
 from langchain_community.embeddings import OpenAIEmbeddings
+# from modules.myembedding import MyEmbeddingFunction
 import streamlit as st
+import openai
 
 class ChromaManager:
-    def __init__(self, persist_directory: str, embedding_function=None):
+    def __init__(self, persist_directory: str):
         """
         ChromaManager 초기화
 
@@ -13,10 +15,9 @@ class ChromaManager:
         :param embedding_function: 사용될 임베딩 함수 (default: OpenAIEmbeddings)
         """
         self.persist_directory = persist_directory
-        self.embedding_function = embedding_function or OpenAIEmbeddings()
+        self.embedding_function = OpenAIEmbeddings(model="text-embedding-ada-002")
+        # self.embedding_function = MyEmbeddingFunction()
         self.collections = {} # collections 속성 초기화
-
-        # if 'db' not in st.session_state:
         self.client = PersistentClient(path=persist_directory)
 
         # Chroma DB 로드
@@ -24,7 +25,10 @@ class ChromaManager:
             persist_directory=persist_directory,
             embedding_function=self.embedding_function,
         )
-        self.retriever = self.db.as_retriever(search_kwargs={"k": 10}, search_distance=0.5)
+
+        # self.vector_collection = self.client.get_or_create_collection("vector_table", embedding_function=self.embedding_function)
+        # self.retriever = self.vector_collection.as_retriever(search_kwargs={"k": 10})
+        self.retriever = self.db.as_retriever(search_kwargs={"k": 5})
 
         # 세션에 db, retriever 저장
         st.session_state["db"] = self.db
@@ -85,6 +89,7 @@ class ChromaManager:
         if not collection:
             print(f"Collection '{collection_name}' not found. Cannot query.")
             return
+        
         try:
             results = collection.query(query_texts=[query_text], n_results=n_results)
             print(f"Query Results from '{collection_name}':")
@@ -109,4 +114,5 @@ class ChromaManager:
     def debug_collections(self):
         for name, collection in self.collections.items():
             print(f"*********************Collection: {name}, Documents: {collection.count()}")
+                
             
